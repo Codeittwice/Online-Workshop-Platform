@@ -1,0 +1,58 @@
+.main {
+  width: 100%;
+  height: 100px;
+  background-color: white;
+  color: black(255, 255, 255);
+  display: flex;
+  justify-content: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  padding-top: 1%;
+  padding-left: 10%;
+  gap: 20px;
+}
+.main h1 {
+  text-size-adjust: 100px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.main h3 {
+  text-size-adjust: 50px;
+  text-align: center;
+}
+
+.link {
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+.active-link {
+  color: black;
+  text-align: center;
+  text-decoration: underline;
+}
+.deleteLink {
+  color: white;
+  background-color: red;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+.link-container {
+  padding-left: 30px;
+  margin: 0px;
+}
+
+.main img {
+  width: 100%;
+  height: 80px;
+}
+.text-shadow {
+  text-shadow: -1px 0 rgb(32, 32, 32), 0 1px rgb(32, 32, 32),
+    1px 0 rgb(32, 32, 32), 0 -1px rgb(32, 32, 32);
+}
+
+.card {
+  display: flex;
+}
