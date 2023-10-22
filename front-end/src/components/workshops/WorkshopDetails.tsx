@@ -17,17 +17,19 @@ import {
 import { useQuery } from "react-query";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { PATHNAMES } from "@/utils/enums";
 
 const WorkshopDetails = (props: any) => {
+  const router = useRouter();
   const id = props.id;
   useState(() => {});
-  const [workshop, setWorkshop] = useState<any>();
   const [shouldEnroll, setShouldEnroll] = useState<boolean>(false);
 
   const {
-    isLoading: isLoadingWorkshops,
-    error: errorWorkshops,
-    data: dataWorkshops,
+    isLoading,
+    error,
+    data: workshop,
   } = useQuery("workshopSingle", async () => {
     const responce = await fetch(`http://localhost:8000/workshops/${id}`, {
       method: "GET",
@@ -36,8 +38,7 @@ const WorkshopDetails = (props: any) => {
         //Authentication: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    const data = await responce.json();
-    setWorkshop(data);
+    return responce.json();
   });
 
   const enrollRequest = async () => {
@@ -55,28 +56,26 @@ const WorkshopDetails = (props: any) => {
     setShouldEnroll(false);
   };
 
-  const {
-    isLoading: isLoadingEnroll,
-    error: errorEnroll,
-    data: dataEnroll,
-  } = useQuery({
-    queryKey: "enroll",
-    queryFn: enrollRequest,
-    enabled: shouldEnroll,
-  });
-
-  const handleEnrollClick = () => {
+  const handleEnrollClick = async () => {
+    await enrollRequest();
     setShouldEnroll(true);
+    //router.back();
+    router.push(PATHNAMES.MYWORKSHOPS);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   //const { title, description, date, instructor_name, capacity } = workshop;
   return (
-    <Flex textAlign="center" justify="center" marginTop="-150">
+    <Flex textAlign="center" justify="center" marginTop="">
       {workshop && (
         <Card maxW="xl" align="center">
           <CardHeader>
             <Image
-              src="https://st3.depositphotos.com/12731704/19191/i/450/depositphotos_191919290-stock-photo-business-colleagues-conference-meeting-room.jpg"
+              src={"https://picsum.photos/seed/" + workshop._id + "/1000"}
+              //src="https://st3.depositphotos.com/12731704/19191/i/450/depositphotos_191919290-stock-photo-business-colleagues-conference-meeting-room.jpg"
               alt={workshop.title}
               borderRadius="lg"
             />
@@ -110,7 +109,6 @@ const WorkshopDetails = (props: any) => {
           </CardFooter>
         </Card>
       )}
-      {!workshop && <Spinner></Spinner>}
     </Flex>
   );
 };

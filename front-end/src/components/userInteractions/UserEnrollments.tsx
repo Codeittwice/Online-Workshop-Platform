@@ -13,6 +13,8 @@ import {
   Box,
   Flex,
   SimpleGrid,
+  Spacer,
+  Spinner,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
@@ -20,11 +22,14 @@ import { useQuery } from "react-query";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import WorkshopItem from "../workshops/WorkshopItem";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 const UserEnrollments = (props: any) => {
-  const [workshops, setWorkshops] = useState<Array<any>>([]);
-
-  const { isLoading, error, data } = useQuery("workshops", async () => {
+  const {
+    isLoading,
+    error,
+    data: workshops,
+  } = useQuery("workshops", async () => {
     const user = JSON.parse(new String(Cookies.get("user")).toString());
     console.log(user);
 
@@ -38,21 +43,51 @@ const UserEnrollments = (props: any) => {
         },
       }
     );
-    const data = await responce.json();
-    setWorkshops(data);
+    //const data = await responce.json();
+    return await responce.json();
   });
+  if (isLoading) {
+    return <Spinner />;
+  }
+  console.log(workshops);
+
   return (
     <>
+      <Heading mb={4} color="gray.600">
+        {" "}
+        My Workshops
+      </Heading>
+      <Spacer />
       <Flex>
-        <SimpleGrid columns={[2, null, 3]} spacing="40px">
-          {workshops.map((workshop: any) => {
-            return (
-              <Box height="300px" key={workshop._id}>
-                <WorkshopItem data={workshop} />
-              </Box>
-            );
-          })}
-        </SimpleGrid>
+        {workshops.length > 0 && (
+          <SimpleGrid columns={[2, null, 3]} spacing="40px">
+            {workshops.map((workshop: any) => {
+              return (
+                <Box height="300px" key={workshop._id}>
+                  <WorkshopItem data={workshop} />
+                </Box>
+              );
+            })}
+          </SimpleGrid>
+        )}
+        {workshops.length === 0 && (
+          <Flex justify="center" textAlign="left">
+            <Box marginTop="5%">
+              <Text fontSize="2xl">
+                You haven't enrolled for any workshops.
+              </Text>
+              <NextLink href={PATHNAMES.WORKSHOPS} passHref>
+                <Button
+                  rightIcon={<ArrowForwardIcon />}
+                  colorScheme="teal"
+                  variant="solid"
+                >
+                  Let's change that!
+                </Button>
+              </NextLink>
+            </Box>
+          </Flex>
+        )}
       </Flex>
     </>
   );
