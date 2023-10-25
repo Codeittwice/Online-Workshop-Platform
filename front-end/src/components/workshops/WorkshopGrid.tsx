@@ -1,18 +1,10 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Flex,
-  SimpleGrid,
-  Spinner,
-} from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 import WorkshopItem from "./WorkshopItem";
 import { useQuery } from "react-query";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import ErrorItem from "../ErrorItem";
 
 const WorkshopGrid = () => {
   const router = useRouter();
@@ -34,13 +26,7 @@ const WorkshopGrid = () => {
   }
 
   if (data.error) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        <AlertTitle>{data.error.title}</AlertTitle>
-        <AlertDescription>{data.error.msg.toString()}</AlertDescription>
-      </Alert>
-    );
+    return <ErrorItem error={data.error} />;
   }
 
   return (

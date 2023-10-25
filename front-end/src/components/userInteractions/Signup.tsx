@@ -1,27 +1,44 @@
-import { USER_FORM_TYPE } from "@/utils/enums";
+import { PATHNAMES, USER_FORM_TYPE } from "@/utils/enums";
 import UserFormLayout from "./UserFormLayout";
 import { useQuery } from "react-query";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import { LoginDataType } from "@/utils/types";
+import router from "next/router";
 
 const Signup = (props: any) => {
-  const [values, setValues] = useState<any>();
-  const { isLoading, error, data } = useQuery("signup", () => {
-    if (!values) return;
-
-    fetch("http://localhost:8000/signup", {
+  const signupUserRequest = async (_values: any) => {
+    const responce = await fetch("http://localhost:8000/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: values.name,
-        email: values.email,
-        password: values.password,
+        name: _values.name,
+        email: _values.email,
+        password: _values.password,
       }),
-    }).then((res) => console.log(res.json()));
-  });
+    });
+    const data: LoginDataType = await responce.json();
+    if (!data) throw new Error("Unable to login!");
+    return data;
+  };
+
+  const processSignup = async (_values: any) => {
+    try {
+      const data = await signupUserRequest(_values);
+
+      Cookies.set("isLoggedIn", "true");
+      Cookies.set("token", new String(data?.token).toString());
+      Cookies.set("user", JSON.stringify(data?.user));
+
+      router.push(PATHNAMES.WORKSHOPS);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const processSubmit = (_values: any) => {
-    setValues(_values);
+    processSignup(_values);
   };
 
   return (

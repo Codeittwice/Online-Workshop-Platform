@@ -4,7 +4,7 @@ const User = require("../models/user");
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authentication").replace("Bearer ", "");
-    console.log(token);
+    //console.log(token);
     if (token.trim() === "Bearer") {
       throw "Please log in.";
     }

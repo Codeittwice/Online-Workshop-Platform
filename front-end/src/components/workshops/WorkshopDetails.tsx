@@ -19,12 +19,14 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { PATHNAMES } from "@/utils/enums";
+import { ErrorType } from "@/utils/types";
+import ErrorItem from "../ErrorItem";
+import NextLink from "next/link";
 
 const WorkshopDetails = (props: any) => {
+  const [enrollStatus, setEnrollStatus] = useState<ErrorType>();
   const router = useRouter();
   const id = props.id;
-  useState(() => {});
-  const [shouldEnroll, setShouldEnroll] = useState<boolean>(false);
 
   const {
     isLoading,
@@ -52,19 +54,21 @@ const WorkshopDetails = (props: any) => {
         user: Cookies.get("user"),
       }),
     });
-    //const data = await responce.json();
-    setShouldEnroll(false);
+    const data = await responce.json();
+    if (data.error) setEnrollStatus(data);
   };
 
   const handleEnrollClick = async () => {
     await enrollRequest();
-    setShouldEnroll(true);
     //router.back();
-    router.push(PATHNAMES.MYWORKSHOPS);
+    if (enrollStatus) router.push(PATHNAMES.MYWORKSHOPS);
   };
 
   if (isLoading) {
     return <Spinner />;
+  }
+  if (enrollStatus?.error) {
+    return <ErrorItem error={enrollStatus.error} />;
   }
 
   //const { title, description, date, instructor_name, capacity } = workshop;
@@ -74,7 +78,7 @@ const WorkshopDetails = (props: any) => {
         <Card maxW="xl" align="center">
           <CardHeader>
             <Image
-              src={"https://picsum.photos/seed/" + workshop._id + "/1000"}
+              src={"https://picsum.photos/seed/" + id + "/1000"}
               //src="https://st3.depositphotos.com/12731704/19191/i/450/depositphotos_191919290-stock-photo-business-colleagues-conference-meeting-room.jpg"
               alt={workshop.title}
               borderRadius="lg"
@@ -99,12 +103,19 @@ const WorkshopDetails = (props: any) => {
                 onClick={handleEnrollClick}
                 variant="solid"
                 colorScheme="teal"
+                // isDisabled={true}
               >
                 Enroll
               </Button>
               <Button variant="ghost" colorScheme="teal">
                 Add to wishlist
               </Button>
+              <NextLink
+                href={PATHNAMES.WORKSHOPFEEDBACK + "/" + workshop._id}
+                passHref
+              >
+                <Button colorScheme="teal">Feedback</Button>
+              </NextLink>
             </ButtonGroup>
           </CardFooter>
         </Card>

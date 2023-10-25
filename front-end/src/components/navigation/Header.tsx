@@ -136,6 +136,11 @@ const Header = (props: any) => {
                     <Button variant="ghost">Wishlist</Button>
                   </MenuItem>
                   <MenuItem>
+                    <NextLink href={PATHNAMES.FEEDBACKS} passHref>
+                      <Button variant="ghost">Feedbacks</Button>
+                    </NextLink>
+                  </MenuItem>
+                  <MenuItem>
                     <Button variant="ghost">Acount</Button>
                   </MenuItem>
                   <MenuItem>

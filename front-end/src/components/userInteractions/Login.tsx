@@ -48,14 +48,6 @@ const Login = (props: any) => {
 
   const processSubmit = async (_values: any) => {
     processLogin(_values);
-    //console.log(_values);
-    //console.log(values);
-    // if (!values) {
-    //   processSubmit(_values);
-    // }
-    /*console.log(values);
-    await refetch();
-    console.log(loginData);*/
   };
 
   return (

@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const router = new express.Router();
 
 /// ENROLL FOR A WORKSHOP
-router.post("/enroll/:workshopId" /*, auth*/, async (req, res) => {
+router.post("/enroll/:workshopId", auth, async (req, res) => {
   try {
     const user = JSON.parse(req.body.user);
     const enrollment = new Enrollment({
@@ -16,14 +16,20 @@ router.post("/enroll/:workshopId" /*, auth*/, async (req, res) => {
     });
     const match = await Enrollment.find({ workshop_id: req.params.workshopId });
 
-    if (match.includes(enrollment)) {
+    console.log(match != []);
+    if (match != []) {
       /// DELETE IF WE HAVE MATCHES
       // const newEnrollments = await Enrollment.deleteMany({
       //   workshop_id: req.params.workshopId,
       // });
       // user.enrollments = newEnrollments;
 
-      throw new Error("You've already enrolled for this course!");
+      throw {
+        error: {
+          title: "You've already enrolled for this course!",
+          msg: "Please try a different one!",
+        },
+      };
     }
     await enrollment.save();
 
@@ -37,7 +43,7 @@ router.post("/enroll/:workshopId" /*, auth*/, async (req, res) => {
 });
 
 /// GET ALL ENROLLMENTS
-router.get("/myworkshops/:userId", async (req, res) => {
+router.get("/myworkshops/:userId", auth, async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ user_id: req.params.userId });
     let workshops = [];
@@ -57,7 +63,7 @@ router.get("/myworkshops/:userId", async (req, res) => {
     //console.log(workshops);
     res.send(workshops);
   } catch (e) {
-    ///console.log(e);
+    console.log(e);
     res.status(500).send(e);
   }
 });

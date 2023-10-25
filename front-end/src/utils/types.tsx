@@ -16,23 +16,9 @@ export type UserType = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-
-export type PostTypeWithTimestamps = {
-  _id?: string; //ObjectId;
-  title?: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type PostUpdate = {
-  title?: string;
-  description?: string;
-};
-
-export type PostCreate = {
-  title?: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+export type ErrorType = {
+  error: {
+    title?: string;
+    msg?: string;
+  };
 };

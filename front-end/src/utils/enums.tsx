@@ -4,6 +4,9 @@ export enum PATHNAMES {
   SIGNUP = "/signup",
   WORKSHOPS = "/workshops",
   MYWORKSHOPS = "/myworkshops",
+  FEEDBACKS = "/myfeedbacks",
+  WORKSHOPFEEDBACK = "/workshops/feedback",
+  NEWFEEDBACK = "/myfeedbacks/new",
 }
 export enum USER_FORM_TYPE {
   LOGIN = "login",

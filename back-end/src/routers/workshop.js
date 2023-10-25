@@ -20,12 +20,9 @@ router.post("/workshops", auth, async (req, res) => {
 });
 /// GET ALL WORKSHOPS
 router.get("/workshops", auth, async (req, res) => {
-  const workshops = await Workshop.find({});
-
-  console.log(req.token);
-  console.log(req.user);
-  //console.log(workshops);
   try {
+    const workshops = await Workshop.find({});
+
     res.send(workshops);
   } catch (e) {
     res.status(500).send(e);

@@ -14,6 +14,11 @@ const feedbackSchema = new mongoose.Schema(
       required: true,
       ref: "Workshop",
     },
+    workshop_title: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     feedback_text: {
       type: String,
       required: true,
