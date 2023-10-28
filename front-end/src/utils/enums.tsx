@@ -3,10 +3,11 @@ export enum PATHNAMES {
   LOGIN = "/login",
   SIGNUP = "/signup",
   WORKSHOPS = "/workshops",
-  MYWORKSHOPS = "/myworkshops",
+  MY_ENROLLMENTS = "/myworkshops",
   FEEDBACKS = "/myfeedbacks",
-  WORKSHOPFEEDBACK = "/workshops/feedback",
-  NEWFEEDBACK = "/myfeedbacks/new",
+  WORKSHOP_FEEDBACK = "/workshops/feedback",
+  NEW_FEEDBACK = "/myfeedbacks/new",
+  NEW_WORKSHOP = "/workshops/new",
 }
 export enum USER_FORM_TYPE {
   LOGIN = "login",

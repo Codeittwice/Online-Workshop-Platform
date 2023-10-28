@@ -1,7 +1,5 @@
 import { PATHNAMES, USER_FORM_TYPE } from "@/utils/enums";
 import UserFormLayout from "./UserFormLayout";
-import { useQuery } from "react-query";
-import { useState } from "react";
 import Cookies from "js-cookie";
 import { LoginDataType } from "@/utils/types";
 import router from "next/router";
@@ -28,9 +26,11 @@ const Signup = (props: any) => {
     try {
       const data = await signupUserRequest(_values);
 
-      Cookies.set("isLoggedIn", "true");
-      Cookies.set("token", new String(data?.token).toString());
-      Cookies.set("user", JSON.stringify(data?.user));
+      Cookies.set("isLoggedIn", "true", { expires: 7 });
+      Cookies.set("isAdmin", (data?.user?.role == "admin").toString()),
+        { expires: 7 };
+      Cookies.set("token", new String(data?.token).toString(), { expires: 7 });
+      Cookies.set("user", JSON.stringify(data?.user), { expires: 7 });
 
       router.push(PATHNAMES.WORKSHOPS);
     } catch (e) {

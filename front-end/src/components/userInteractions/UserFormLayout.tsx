@@ -3,7 +3,6 @@ import { Flex, Heading, Box, Link, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import LoginForm from "./forms/LoginForm";
 import SignupForm from "./forms/SignupForm";
-import { log } from "console";
 
 const UserFormLayout = (props: any) => {
   const [heading, setHeading] = useState("");

@@ -3,14 +3,19 @@ import {
   FormLabel,
   Input,
   Button,
-  Box,
-  FormHelperText,
   FormErrorMessage,
+  InputRightElement,
+  InputGroup,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
+import { useState } from "react";
 
 const UserFormLayout = (props: any) => {
   const { buttonText } = props;
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
   function validateName(value: String) {
     let error;
     if (!value) {
@@ -41,7 +46,6 @@ const UserFormLayout = (props: any) => {
       initialValues={{ name: "", email: "", password: "" }}
       onSubmit={(values, actions) => {
         props.onSubmit(values);
-        //alert(JSON.stringify(values, null, 2));
         actions.setSubmitting(false);
       }}
     >
@@ -71,7 +75,14 @@ const UserFormLayout = (props: any) => {
                 isInvalid={form.errors.password && form.touched.password}
               >
                 <FormLabel>Password</FormLabel>
-                <Input {...field} type="password" />
+                <InputGroup size="md">
+                  <Input {...field} type={show ? "text" : "password"} />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleClick}>
+                      {show ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>{form.errors.password}</FormErrorMessage>
               </FormControl>
             )}
@@ -90,40 +101,3 @@ const UserFormLayout = (props: any) => {
   );
 };
 export default UserFormLayout;
-
-/* 
-<FormControl>
-  <FormLabel>Name</FormLabel>
-  <Input
-    type="name"
-    onChange={formik.handleChange}
-    value={formik.values.name}
-  />
-  <FormLabel>Email address</FormLabel>
-  <Input
-    type="email"
-    onChange={formik.handleChange}
-    value={formik.values.email}
-  />
-  <FormLabel>Password</FormLabel>
-  <Input
-    type="password"
-    onChange={formik.handleChange}
-    value={formik.values.password}
-  />
-  <FormHelperText textAlign="right">At least 7 characters long.</FormHelperText>
-  { <FormLabel>Confirm password</FormLabel>
-      <Input
-        type="password"
-        onChange={formik.handleChange}
-        value={formik.values.password}
-      />
-      <FormHelperText textAlign="right">
-        At least 7 characters long.
-      </FormHelperText> }
-  <Box position="relative" padding="5"></Box>
-  <Button type="submit" backgroundColor="teal.500" color="white">
-    {props.buttonText}
-  </Button>
-</FormControl>;
-*/

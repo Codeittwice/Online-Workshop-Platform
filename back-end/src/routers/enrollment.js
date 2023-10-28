@@ -16,8 +16,7 @@ router.post("/enroll/:workshopId", auth, async (req, res) => {
     });
     const match = await Enrollment.find({ workshop_id: req.params.workshopId });
 
-    console.log(match != []);
-    if (match != []) {
+    if (match.length !== 0) {
       /// DELETE IF WE HAVE MATCHES
       // const newEnrollments = await Enrollment.deleteMany({
       //   workshop_id: req.params.workshopId,

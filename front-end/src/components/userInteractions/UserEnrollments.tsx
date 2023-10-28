@@ -1,29 +1,17 @@
 import { PATHNAMES } from "@/utils/enums";
 import {
-  Card,
-  Stack,
-  CardBody,
   Heading,
-  CardFooter,
   Button,
-  Image,
   Text,
-  ButtonGroup,
-  Divider,
   Box,
   Flex,
   SimpleGrid,
   Spacer,
   Spinner,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 import { useQuery } from "react-query";
-import { useState } from "react";
 import Cookies from "js-cookie";
 import WorkshopItem from "../workshops/WorkshopItem";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -39,7 +27,6 @@ const UserEnrollments = (props: any) => {
       return { error: { title: "Cannot find user!", msg: "Please log in!" } };
 
     const user = JSON.parse(new String(Cookies.get("user")).toString());
-    console.log(user);
 
     const responce = await fetch(
       "http://localhost:8000/myworkshops/" + user._id,
@@ -51,8 +38,7 @@ const UserEnrollments = (props: any) => {
         },
       }
     );
-    //const data = await responce.json();
-    return await responce.json();
+    return responce.json();
   });
 
   if (isLoading) {

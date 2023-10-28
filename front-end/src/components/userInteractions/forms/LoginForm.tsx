@@ -3,13 +3,18 @@ import {
   FormLabel,
   Input,
   Button,
-  Box,
   FormErrorMessage,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
+import { useState } from "react";
 
 const UserFormLayout = (props: any) => {
   const { buttonText } = props;
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   function validateEmail(value: any) {
     let error;
@@ -23,7 +28,7 @@ const UserFormLayout = (props: any) => {
   function validatePassword(value: String) {
     let error;
     if (!value) {
-      error = "Name is required";
+      error = "Required";
     } else if (value.length < 7) {
       error = "Password must be more than 7 symbols";
     }
@@ -35,7 +40,6 @@ const UserFormLayout = (props: any) => {
       onSubmit={(values, actions) => {
         props.onSubmit(values);
         actions.setSubmitting(false);
-        //alert(JSON.stringify(values, null, 2));
       }}
     >
       {(props) => (
@@ -55,7 +59,14 @@ const UserFormLayout = (props: any) => {
                 isInvalid={form.errors.password && form.touched.password}
               >
                 <FormLabel>Password</FormLabel>
-                <Input {...field} type="password" />
+                <InputGroup size="md">
+                  <Input {...field} type={show ? "text" : "password"} />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleClick}>
+                      {show ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>{form.errors.password}</FormErrorMessage>
               </FormControl>
             )}
@@ -74,16 +85,3 @@ const UserFormLayout = (props: any) => {
   );
 };
 export default UserFormLayout;
-
-{
-  /* <FormControl>
-      <FormLabel>Email address</FormLabel>
-      <Input type="email" />
-      <FormLabel>Password</FormLabel>
-      <Input type="password" />
-      <Box position="relative" padding="5"></Box>
-      <Button type="submit" backgroundColor="teal.500" color="white">
-        {props.buttonText}
-      </Button>
-    </FormControl></> */
-}

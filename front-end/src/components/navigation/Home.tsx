@@ -20,7 +20,7 @@ const Home = () => {
               To search through our vast network of workshops, you'll need to
               log in first.
             </Text>
-            <br></br>
+            <br />
             <NextLink href={PATHNAMES.LOGIN} passHref>
               <Button
                 rightIcon={<ArrowForwardIcon />}
@@ -37,7 +37,7 @@ const Home = () => {
             <Text fontSize="xl">
               Search through our vast network of workshops.
             </Text>
-            <br></br>
+            <br />
             <NextLink href={PATHNAMES.WORKSHOPS} passHref>
               <Button
                 rightIcon={<ArrowForwardIcon />}
@@ -49,22 +49,6 @@ const Home = () => {
             </NextLink>
           </>
         )}
-        {/* <>
-          <Text fontSize="xl">
-            To search through our vast network of workshops, you'll need to log
-            in first.
-          </Text>
-          <br></br>
-          <NextLink href={PATHNAMES.LOGIN} passHref>
-            <Button
-              rightIcon={<ArrowForwardIcon />}
-              colorScheme="teal"
-              variant="solid"
-            >
-              Log in
-            </Button>
-          </NextLink>
-        </> */}
       </Box>
     </Flex>
   );

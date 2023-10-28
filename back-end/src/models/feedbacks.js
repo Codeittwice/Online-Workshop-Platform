@@ -19,6 +19,11 @@ const feedbackSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
+    user_name: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     feedback_text: {
       type: String,
       required: true,

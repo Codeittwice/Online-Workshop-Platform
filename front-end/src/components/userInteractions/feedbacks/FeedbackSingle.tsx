@@ -1,9 +1,11 @@
 import {
+  Avatar,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
   Heading,
+  Spacer,
   Text,
 } from "@chakra-ui/react";
 import StarRating from "../rating/StarRating";
@@ -17,6 +19,17 @@ const FeedbackSingle = (props: any) => {
         </CardHeader>
 
         <CardBody>
+          <b>By: </b>
+          <Text color={"teal.500"}>
+            {props.data.user_name + " "}
+            <Avatar
+              size="xs"
+              name={props.data.user_name}
+              src="https://bit.ly/broken-link"
+            />
+          </Text>
+
+          <Spacer />
           <b>Rating:</b>
           <StarRating rating={props.data.rating} />
         </CardBody>

@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 export const logOutUserRequest = async () => {
-  //if (!values) return;
   const responce = await fetch("http://localhost:8000/logout", {
     method: "POST",
     headers: {

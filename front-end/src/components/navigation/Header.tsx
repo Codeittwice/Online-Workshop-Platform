@@ -13,36 +13,48 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Icon,
+  Spinner,
 } from "@chakra-ui/react";
-import { useQuery } from "react-query";
+import {
+  MdAccountCircle,
+  MdFeedback,
+  MdInventory,
+  MdLogout,
+  MdSettings,
+} from "react-icons/md";
+
 import { PATHNAMES } from "@/utils/enums";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { logOutUserRequest } from "../userInteractions/Logout";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import Spinner from "../Spinner";
 
 const Header = (props: any) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>({ name: "Bobi Bobev" });
-  // Cookies.set("isLoggedIn", "flase");
-  // Cookies.set("token", "");
-  // Cookies.set("user", "");
+  const [user, setUser] = useState<any>({});
   const [loggedIn, setLoggedIn] = useState<boolean>(
     Cookies.get("isLoggedIn") === "true"
   );
-
+  // Cookies.set("isLoggedIn", "flase");
+  // Cookies.set("token", "");
+  // Cookies.set("user", "");
+  console.log(Cookies.get("isLoggedIn") === "true");
   useEffect(() => {
+    console.log("USEEFFECT");
     if (loggedIn !== (Cookies.get("isLoggedIn") === "true")) {
+      console.log("SETLOGGEDIN");
       setLoggedIn(Cookies.get("isLoggedIn") === "true");
     }
-    if (loggedIn && Cookies.get("user") !== "") {
+    if (
+      Cookies.get("isLoggedIn") === "true" /*&&
+      user !== JSON.parse(new String(Cookies.get("user")).toString())*/
+    ) {
+      console.log("SETUSER");
       const _user = JSON.parse(new String(Cookies.get("user")).toString());
 
       setUser(_user);
     }
-  }, [loggedIn, Cookies.get("isLoggedIn") === "true"]);
+  }, [Cookies.get("isLoggedIn") === "true"]);
 
   ///LOGOUT
   const handleLogOut = async () => {
@@ -50,6 +62,7 @@ const Header = (props: any) => {
     setLoggedIn(false);
 
     Cookies.set("isLoggedIn", "false");
+    Cookies.set("isAdmin", "false");
     Cookies.set("token", "");
     Cookies.set("user", "");
     router.push(PATHNAMES.HOME);
@@ -67,6 +80,9 @@ const Header = (props: any) => {
       }),
     });
   };
+  if (typeof window === "undefined") {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -100,14 +116,17 @@ const Header = (props: any) => {
             <>
               <ButtonGroup gap="2" paddingLeft="5rem">
                 <NextLink href={PATHNAMES.WORKSHOPS} passHref>
-                  <Button
-                    colorScheme="whiteAlpha"
-                    backgroundColor="white"
-                    color="teal.500"
-                  >
+                  <Button colorScheme="teal" variant={"ghost"}>
                     Browse Workshops
                   </Button>
                 </NextLink>
+                {Cookies.get("isAdmin") === "true" && (
+                  <NextLink href={PATHNAMES.NEW_WORKSHOP} passHref>
+                    <Button colorScheme="teal" variant={"ghost"}>
+                      Add New Workshop
+                    </Button>
+                  </NextLink>
+                )}
               </ButtonGroup>
               <Spacer />
               <Text color="teal.500" textDecoration="underline">
@@ -123,28 +142,50 @@ const Header = (props: any) => {
                 </MenuButton>
                 <MenuList>
                   <MenuItem>
-                    <Button variant="ghost" onClick={handleLogOut}>
-                      Log out
+                    <Button
+                      variant="ghost"
+                      rightIcon={<Icon as={MdAccountCircle} />}
+                    >
+                      Acount
                     </Button>
                   </MenuItem>
                   <MenuItem>
-                    <NextLink href={PATHNAMES.MYWORKSHOPS} passHref>
-                      <Button variant="ghost">My workshops</Button>
-                    </NextLink>
+                    <Button
+                      variant="ghost"
+                      rightIcon={<Icon as={MdSettings} />}
+                    >
+                      Settings
+                    </Button>
                   </MenuItem>
                   <MenuItem>
-                    <Button variant="ghost">Wishlist</Button>
+                    <NextLink href={PATHNAMES.MY_ENROLLMENTS} passHref>
+                      <Button
+                        variant="ghost"
+                        rightIcon={<Icon as={MdInventory} />}
+                      >
+                        Enrollments
+                      </Button>
+                    </NextLink>
                   </MenuItem>
                   <MenuItem>
                     <NextLink href={PATHNAMES.FEEDBACKS} passHref>
-                      <Button variant="ghost">Feedbacks</Button>
+                      <Button
+                        variant="ghost"
+                        rightIcon={<Icon as={MdFeedback} />}
+                      >
+                        Feedbacks
+                      </Button>
                     </NextLink>
                   </MenuItem>
                   <MenuItem>
-                    <Button variant="ghost">Acount</Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button variant="ghost">Settings</Button>
+                    <Button
+                      variant="ghost"
+                      color={"red"}
+                      onClick={handleLogOut}
+                      rightIcon={<Icon as={MdLogout} />}
+                    >
+                      Log out
+                    </Button>
                   </MenuItem>
                 </MenuList>
               </Menu>

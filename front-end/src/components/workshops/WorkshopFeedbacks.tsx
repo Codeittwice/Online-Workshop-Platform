@@ -1,13 +1,15 @@
-import { Heading, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import ErrorItem from "../../ErrorItem";
+import ErrorItem from "../ErrorItem";
 import { useQuery } from "react-query";
-import FeedbackSingle from "./FeedbackSingle";
+import FeedbackSingle from "../userInteractions/feedbacks/FeedbackSingle";
 
-const Feedbacks = (props: any) => {
+const WorkshopFeedbacks = (props: any) => {
+  const id = props.id;
+
   const { isLoading, error, data } = useQuery("feedbacks", async () => {
     console.log(JSON.parse(new String(Cookies.get("user")).toString())._id);
-    const responce = await fetch("http://localhost:8000/feedbacks", {
+    const responce = await fetch("http://localhost:8000/feedbacks/" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -28,13 +30,10 @@ const Feedbacks = (props: any) => {
 
   return (
     <>
-      <Heading mb={4} color="gray.600">
-        My Feedbacks
-      </Heading>
       {data.map((feedback: any) => {
         return <FeedbackSingle data={feedback}></FeedbackSingle>;
       })}
     </>
   );
 };
-export default Feedbacks;
+export default WorkshopFeedbacks;

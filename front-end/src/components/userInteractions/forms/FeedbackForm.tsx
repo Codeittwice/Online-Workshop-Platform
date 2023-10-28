@@ -18,8 +18,6 @@ import Cookies from "js-cookie";
 import ErrorItem from "@/components/ErrorItem";
 
 const UserFormLayout = (props: any) => {
-  const { buttonText } = props;
-
   const [rating, setRating] = useState(0);
   const { isLoading, error, data } = useQuery("workshops", async () => {
     const responce = await fetch("http://localhost:8000/workshops", {
@@ -53,17 +51,10 @@ const UserFormLayout = (props: any) => {
         values.rating = rating;
         props.onSubmit(values);
         actions.setSubmitting(false);
-        //alert(JSON.stringify(values, null, 2));
       }}
     >
       {(props) => (
         <Form>
-          {/* <RadioGroup name="avatar" py={2} display="flex" gridColumnGap={2}>
-            {data.map(({ name, image }: any) => {
-              console.log("App line 32 ~ name: ", name);
-              return <ImageRadio key={image} image={image} value={name} />;
-            })}
-          </RadioGroup> */}
           <Field name="workshop_id">
             {({ field, form }: any) => (
               <Select
@@ -73,7 +64,6 @@ const UserFormLayout = (props: any) => {
               >
                 {" "}
                 {data.map((workshop: any) => {
-                  //console.log(workshop.title);
                   return (
                     <option key={workshop._id} value={workshop._id}>
                       <b>{workshop.title}</b>
@@ -106,7 +96,7 @@ const UserFormLayout = (props: any) => {
             isLoading={props.isSubmitting}
             type="submit"
           >
-            {"Submite feedback"}
+            {"Submit feedback"}
           </Button>
         </Form>
       )}
