@@ -31,40 +31,43 @@ import { useRouter } from "next/router";
 
 const Header = (props: any) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>({});
-  const [loggedIn, setLoggedIn] = useState<boolean>(
-    Cookies.get("isLoggedIn") === "true"
-  );
-  // Cookies.set("isLoggedIn", "flase");
-  // Cookies.set("token", "");
-  // Cookies.set("user", "");
-  console.log(Cookies.get("isLoggedIn") === "true");
-  useEffect(() => {
-    console.log("USEEFFECT");
-    if (loggedIn !== (Cookies.get("isLoggedIn") === "true")) {
-      console.log("SETLOGGEDIN");
-      setLoggedIn(Cookies.get("isLoggedIn") === "true");
-    }
-    if (
-      Cookies.get("isLoggedIn") === "true" /*&&
-      user !== JSON.parse(new String(Cookies.get("user")).toString())*/
-    ) {
-      console.log("SETUSER");
-      const _user = JSON.parse(new String(Cookies.get("user")).toString());
+  const [user, setUser] = useState<any>();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-      setUser(_user);
+  /// COOKIES ARE UNDEFINED WHEN WINDOW IS UNDEFINED
+  // console.log(typeof window);
+  // console.log("Cookies: ");
+  // console.log(Cookies.get());
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      if (Cookies.get("isLoggedIn") ? true : false) {
+        setIsLoggedIn(true);
+        setUser(JSON.parse(new String(Cookies.get("user")).toString()));
+      } else {
+        setIsLoggedIn(false);
+      }
+    } else {
+      returnSpinner();
     }
-  }, [Cookies.get("isLoggedIn") === "true"]);
+  }, [typeof window, Cookies.get("isLoggedIn") === "true"]);
+
+  /// insert code (*)
 
   ///LOGOUT
   const handleLogOut = async () => {
     await logOutUserRequest();
-    setLoggedIn(false);
+    setIsLoggedIn(false);
 
-    Cookies.set("isLoggedIn", "false");
+    Cookies.remove("isLoggedIn");
     Cookies.set("isAdmin", "false");
     Cookies.set("token", "");
     Cookies.set("user", "");
+
+    /*
+    Cookies.remove("isAdmin");
+    Cookies.remove("token");
+    Cookies.remove("user"); */
     router.push(PATHNAMES.HOME);
   };
 
@@ -80,133 +83,139 @@ const Header = (props: any) => {
       }),
     });
   };
-  if (typeof window === "undefined") {
+
+  const returnSpinner = () => {
     return <Spinner />;
-  }
+  };
+  // if (typeof window === "undefined") {
+  //   return <Spinner />;
+  // }
+  // return <></>;
+  // return <></>;
 
   return (
-    <>
-      <Box
-        borderRadius="xl"
-        backgroundColor="greyAlpha.100"
-        px={10}
-        py={2}
-        h={20}
-        shadow="lg"
-        margin={"1rem"}
+    <Box
+      borderRadius="xl"
+      backgroundColor="greyAlpha.100"
+      px={10}
+      py={2}
+      h={20}
+      shadow="lg"
+      margin={"1rem"}
+    >
+      <Flex
+        minWidth="max-content"
+        alignItems="center"
+        justifyContent="center"
+        gap="2"
+        padding="1rem"
       >
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          justifyContent="center"
-          gap="2"
-          padding="1rem"
-        >
-          <Box>
-            <NextLink href={PATHNAMES.HOME} passHref>
-              <Button colorScheme="teal" variant="ghost">
-                <Heading mb={4} color="gray.600">
-                  Workshop Portal
-                </Heading>
+        <Box>
+          <NextLink href={PATHNAMES.HOME} passHref>
+            <Button colorScheme="teal" variant="ghost">
+              <Heading mb={4} color="gray.600">
+                Workshop Portal
+              </Heading>
+            </Button>
+          </NextLink>
+        </Box>
+
+        {isLoggedIn && (
+          <ButtonGroup gap="2" paddingLeft="5rem">
+            <NextLink href={PATHNAMES.WORKSHOPS} passHref>
+              <Button colorScheme="teal" variant={"ghost"}>
+                Browse Workshops
               </Button>
             </NextLink>
-          </Box>
+            {Cookies.get("isAdmin") === "true" && (
+              <NextLink href={PATHNAMES.NEW_WORKSHOP} passHref>
+                <Button colorScheme="teal" variant={"ghost"}>
+                  Add New Workshop
+                </Button>
+              </NextLink>
+            )}
+          </ButtonGroup>
+        )}
+        <Spacer />
 
-          {loggedIn && (
-            <>
-              <ButtonGroup gap="2" paddingLeft="5rem">
-                <NextLink href={PATHNAMES.WORKSHOPS} passHref>
-                  <Button colorScheme="teal" variant={"ghost"}>
-                    Browse Workshops
-                  </Button>
-                </NextLink>
-                {Cookies.get("isAdmin") === "true" && (
-                  <NextLink href={PATHNAMES.NEW_WORKSHOP} passHref>
-                    <Button colorScheme="teal" variant={"ghost"}>
-                      Add New Workshop
-                    </Button>
+        {isLoggedIn && (
+          <>
+            <Text color="teal.500" textDecoration="underline">
+              {user.name}
+            </Text>
+
+            <Menu>
+              <MenuButton as={Button} variant="ghost">
+                <Avatar
+                  size="sm"
+                  name={user.name}
+                  src="https://bit.ly/broken-link"
+                />
+              </MenuButton>
+
+              <MenuList>
+                <MenuItem>
+                  Acount
+                  <Icon as={MdAccountCircle} marginLeft={"0.5rem"} />
+                </MenuItem>
+
+                <MenuItem>
+                  Settings
+                  <Icon as={MdSettings} marginLeft={"0.5rem"} />
+                </MenuItem>
+                <MenuItem>
+                  <NextLink href={PATHNAMES.MY_ENROLLMENTS} passHref>
+                    Enrollments
+                    <Icon as={MdInventory} marginLeft={"0.5rem"} />
                   </NextLink>
-                )}
-              </ButtonGroup>
-              <Spacer />
-              <Text color="teal.500" textDecoration="underline">
-                {user.name}
-              </Text>
-              <Menu>
-                <MenuButton as={Button} variant="ghost">
-                  <Avatar
-                    size="sm"
-                    name={user.name}
-                    src="https://bit.ly/broken-link"
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>
-                    <Button
-                      variant="ghost"
-                      rightIcon={<Icon as={MdAccountCircle} />}
-                    >
-                      Acount
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      variant="ghost"
-                      rightIcon={<Icon as={MdSettings} />}
-                    >
-                      Settings
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <NextLink href={PATHNAMES.MY_ENROLLMENTS} passHref>
-                      <Button
-                        variant="ghost"
-                        rightIcon={<Icon as={MdInventory} />}
-                      >
-                        Enrollments
-                      </Button>
-                    </NextLink>
-                  </MenuItem>
-                  <MenuItem>
-                    <NextLink href={PATHNAMES.FEEDBACKS} passHref>
-                      <Button
-                        variant="ghost"
-                        rightIcon={<Icon as={MdFeedback} />}
-                      >
-                        Feedbacks
-                      </Button>
-                    </NextLink>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      variant="ghost"
-                      color={"red"}
-                      onClick={handleLogOut}
-                      rightIcon={<Icon as={MdLogout} />}
-                    >
-                      Log out
-                    </Button>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </>
-          )}
-          {!loggedIn && (
-            <>
-              <Spacer />
-              <ButtonGroup gap="2">
-                <NextLink href={PATHNAMES.SIGNUP} passHref>
-                  <Button colorScheme="teal">Sign Up</Button>
-                </NextLink>
-                <NextLink href={PATHNAMES.LOGIN} passHref>
-                  <Button colorScheme="teal">Log in</Button>
-                </NextLink>
-              </ButtonGroup>
-            </>
-          )}
-        </Flex>
-      </Box>
-    </>
+                </MenuItem>
+                <MenuItem>
+                  <NextLink href={PATHNAMES.FEEDBACKS} passHref>
+                    Feedbacks
+                    <Icon as={MdFeedback} marginLeft={"0.5rem"} />
+                  </NextLink>
+                </MenuItem>
+                <MenuItem color={"red"} onClick={handleLogOut}>
+                  Log out
+                  <Icon as={MdLogout} marginLeft={"0.5rem"} />
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </>
+        )}
+        {!isLoggedIn && (
+          <>
+            <ButtonGroup gap="2">
+              <NextLink href={PATHNAMES.SIGNUP} passHref>
+                <Button colorScheme="teal">Sign Up</Button>
+              </NextLink>
+              <NextLink href={PATHNAMES.LOGIN} passHref>
+                <Button colorScheme="teal">Log in</Button>
+              </NextLink>
+            </ButtonGroup>
+          </>
+        )}
+      </Flex>
+    </Box>
   );
 };
 export default Header;
+
+/// --->  (*)
+//console.log(Cookies.get("isLoggedIn") === "true");
+// useEffect(() => {
+//   console.log("USEEFFECT");
+//   if (isLoggedIn !== (Cookies.get("isLoggedIn") === "true")) {
+//     console.log("SETLOGGEDIN");
+//     setIsLoggedIn(Cookies.get("isLoggedIn") === "true");
+//   }
+//   if (
+//     Cookies.get("isLoggedIn") === "true" &&
+//     user !== JSON.parse(new String(Cookies.get("user")).toString())
+//   ) {
+//     console.log("SETUSER");
+//     const _user = JSON.parse(new String(Cookies.get("user")).toString());
+
+//     setUser(_user);
+//   }
+// }, [Cookies.get("isLoggedIn") === "true"]);

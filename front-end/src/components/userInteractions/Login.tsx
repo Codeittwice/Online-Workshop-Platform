@@ -28,12 +28,17 @@ const Login = (props: any) => {
   const processLogin = async (_values: any) => {
     try {
       const data = await logInUserRequest(_values);
+      const expirationDate = Date.now() + 5 * 24 * 60 * 60 * 1000; /// 5 days from now
 
-      Cookies.set("isLoggedIn", "true", { expires: 7 });
+      Cookies.set("isLoggedIn", "true", { expires: expirationDate });
       Cookies.set("isAdmin", (data?.user?.role == "admin").toString()),
-        { expires: 7 };
-      Cookies.set("token", new String(data?.token).toString(), { expires: 7 });
-      Cookies.set("user", JSON.stringify(data?.user), { expires: 7 });
+        { expires: expirationDate };
+      Cookies.set("token", new String(data?.token).toString(), {
+        expires: expirationDate,
+      });
+      Cookies.set("user", JSON.stringify(data?.user), {
+        expires: expirationDate,
+      });
 
       router.push(PATHNAMES.WORKSHOPS);
     } catch (e) {

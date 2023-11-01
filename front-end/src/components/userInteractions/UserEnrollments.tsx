@@ -53,7 +53,7 @@ const UserEnrollments = (props: any) => {
     <>
       <Heading mb={4} color="gray.600">
         {" "}
-        My Workshops
+        My Enrollments
       </Heading>
       <Spacer />
       <Flex>

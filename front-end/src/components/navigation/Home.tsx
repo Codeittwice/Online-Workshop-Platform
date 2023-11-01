@@ -7,14 +7,14 @@ import { PATHNAMES } from "@/utils/enums";
 import { useState } from "react";
 
 const Home = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(
-    Cookies.get("isLoggedIn") === "true"
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    Cookies.get("isLoggedIn") ? true : false
   );
   return (
     <Flex justify="center" textAlign="center">
       <Box marginTop="5%">
         <Heading mb={4}>Welcome to the Online Workshop Portal!</Heading>
-        {!loggedIn && (
+        {!isLoggedIn && (
           <>
             <Text fontSize="xl">
               To search through our vast network of workshops, you'll need to
@@ -32,7 +32,7 @@ const Home = () => {
             </NextLink>
           </>
         )}
-        {loggedIn && (
+        {isLoggedIn && (
           <>
             <Text fontSize="xl">
               Search through our vast network of workshops.

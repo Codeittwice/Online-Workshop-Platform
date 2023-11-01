@@ -11,8 +11,10 @@ import {
 import { Formik, Form, Field } from "formik";
 import { useRef } from "react";
 import { MdSearch } from "react-icons/md";
+import useDebounce from "./useDebounce";
 
 const NewWorkshopForm = (props: any) => {
+  const debouncedOnChange = useDebounce(props.onSubmit, " ");
   return (
     <Formik
       initialValues={{ search: "" }}
@@ -35,6 +37,7 @@ const NewWorkshopForm = (props: any) => {
                     onChange={(e) => {
                       handleChange(e);
                       submitForm();
+                      //debouncedOnChange();
                     }}
                   />
                 </FormControl>

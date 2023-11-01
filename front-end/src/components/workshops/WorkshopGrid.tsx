@@ -51,7 +51,6 @@ const WorkshopGrid = () => {
           {data &&
             data.length > 0 &&
             data.map((workshop: any) => {
-              console.log(workshop);
               return (
                 <Box height="300px" key={workshop._id}>
                   <WorkshopItem data={workshop} />

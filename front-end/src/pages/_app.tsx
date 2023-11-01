@@ -14,11 +14,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     // Cookies.set("isLoggedIn", "false");
     // Cookies.set("token", "");
     // Cookies.set("user", "");
-  });
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <Layout route={router.pathname}>
+        <Layout>
           <Component {...pageProps} />
         </Layout>
       </ChakraProvider>
